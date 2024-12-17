@@ -96,6 +96,52 @@ The block price sensors are not enabled by default.
 | Exchange rate             | Integer           | The exchange rate between the configure currency and Euro's.                      |
 | Last updated              | Datetime          | The time when the market prices were last updated.                                |
 
+## Actions
+
+### Get price for date
+
+The integration entities provide price information only for the current date. Use the "Get price for date" action to retrieve pricing information for any date within the last two months or for tomorrow.
+
+The areas and currency parameters are optional. If omitted, the values configured in the integration will be used.
+
+See [examples](#examples) how to use in a trigger template sensor.
+
+{% configuration_basic %}
+Nord Pool configuration entry:
+  description: Select the Nord Pool configuration entry to target.
+Date:
+  description: Pick the date to fetch prices for (see note about possible dates below).
+Areas:
+  description: Select one market area to create output for. If omitted it will use the areas from the configuration entry.
+Currency:
+  description: Currency to display prices in. EUR is the base currency in Nord Pool prices.  If omitted it will use the currency from the configuration entry.
+{% endconfiguration_basic %}
+
+{% note %}
+
+The public API only allows us to see past pricing information for up to 2 months.
+
+Tomorrow's prices are typically released around 13:00 CET, and trying to get them before that time will generate an error that needs to be considered in such a case.
+
+{% endnote %}
+
+#### Example action with data
+
+{% raw %}
+
+```yaml
+action: nordpool.get_prices_for_date
+data:
+  config_entry: 1234567890a
+  date: "2024-11-10"
+  areas:
+    - SE3
+    - SE4
+  currency: SEK
+```
+
+{% endraw %}
+
 ## Examples
 
 A template sensor to add VAT and fixed cost is useful to get the actual energy cost in the energy dashboard.
